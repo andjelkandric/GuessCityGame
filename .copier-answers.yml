@@ -1,0 +1,10 @@
+# Changes here will be overwritten by Copier; NEVER EDIT MANUALLY
+_commit: 1.0.0
+_src_path: gh:algorandfoundation/algokit-fullstack-template
+author_email: arsic2001sofija@gmail.com
+author_name: Sofija
+contract_name: guess_city
+deployment_language: python
+preset_name: starter
+project_name: GuessCityGame
+
