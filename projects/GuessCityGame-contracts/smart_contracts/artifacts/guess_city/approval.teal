@@ -1,0 +1,489 @@
+#pragma version 8
+intcblock 0 1
+bytecblock 0x 0x6775657373696e675f63697479 0x726573756c74 0x63697479 0x151f7c75 0x706c617965725f6f6e65 0x706c617965725f74776f 0x7761676572 0x4e6f20706c61796572206f6e65 0x4e6f20706c617965722074776f
+txn NumAppArgs
+intc_0 // 0
+==
+bnz main_l10
+txna ApplicationArgs 0
+pushbytes 0xf53e8139 // "play(string,pay)uint64"
+==
+bnz main_l9
+txna ApplicationArgs 0
+pushbytes 0xd4badca4 // "game_result(account)string"
+==
+bnz main_l8
+txna ApplicationArgs 0
+pushbytes 0xb780799a // "sum_of_fees()uint64"
+==
+bnz main_l7
+txna ApplicationArgs 0
+pushbytes 0xdb6b3c46 // "word_length()(string,uint64)"
+==
+bnz main_l6
+err
+main_l6:
+txn OnCompletion
+intc_0 // NoOp
+==
+txn ApplicationID
+intc_0 // 0
+!=
+&&
+assert
+callsub wordlengthcaster_11
+intc_1 // 1
+return
+main_l7:
+txn OnCompletion
+intc_0 // NoOp
+==
+txn ApplicationID
+intc_0 // 0
+!=
+&&
+assert
+callsub sumoffeescaster_10
+intc_1 // 1
+return
+main_l8:
+txn OnCompletion
+intc_0 // NoOp
+==
+txn ApplicationID
+intc_0 // 0
+!=
+&&
+assert
+callsub gameresultcaster_9
+intc_1 // 1
+return
+main_l9:
+txn OnCompletion
+intc_0 // NoOp
+==
+txn ApplicationID
+intc_0 // 0
+!=
+&&
+assert
+callsub playcaster_8
+intc_1 // 1
+return
+main_l10:
+txn OnCompletion
+intc_0 // NoOp
+==
+bnz main_l14
+txn OnCompletion
+intc_1 // OptIn
+==
+bnz main_l13
+err
+main_l13:
+txn ApplicationID
+intc_0 // 0
+!=
+assert
+callsub optin_1
+intc_1 // 1
+return
+main_l14:
+txn ApplicationID
+intc_0 // 0
+==
+assert
+callsub create_0
+intc_1 // 1
+return
+
+// create
+create_0:
+proto 0 0
+bytec_1 // "guessing_city"
+bytec_0 // ""
+app_global_put
+bytec 5 // "player_one"
+bytec 8 // "No player one"
+app_global_put
+bytec 6 // "player_two"
+bytec 9 // "No player two"
+app_global_put
+bytec_2 // "result"
+pushbytes 0x6868686868 // "hhhhh"
+app_global_put
+bytec 7 // "wager"
+intc_0 // 0
+app_global_put
+retsub
+
+// opt_in
+optin_1:
+proto 0 0
+bytec 5 // "player_one"
+app_global_get
+bytec 8 // "No player one"
+==
+bnz optin_1_l4
+bytec 6 // "player_two"
+app_global_get
+bytec 9 // "No player two"
+==
+bnz optin_1_l3
+intc_0 // 0
+return
+optin_1_l3:
+bytec 6 // "player_two"
+txn Sender
+app_global_put
+b optin_1_l5
+optin_1_l4:
+bytec 5 // "player_one"
+txn Sender
+app_global_put
+optin_1_l5:
+txn Sender
+bytec_3 // "city"
+bytec_0 // ""
+app_local_put
+retsub
+
+// play
+play_2:
+proto 2 1
+intc_0 // 0
+bytec_1 // "guessing_city"
+app_global_get
+bytec_0 // ""
+==
+bz play_2_l2
+bytec_1 // "guessing_city"
+intc_0 // 0
+callsub transformword_3
+app_global_put
+play_2_l2:
+bytec 7 // "wager"
+frame_dig -1
+gtxns Amount
+app_global_put
+txn Sender
+bytec_3 // "city"
+frame_dig -2
+extract 2 0
+app_local_put
+retsub
+
+// transform_word
+transformword_3:
+proto 1 1
+frame_dig -1
+intc_0 // 0
+==
+bnz transformword_3_l16
+frame_dig -1
+intc_1 // 1
+==
+bnz transformword_3_l15
+frame_dig -1
+pushint 2 // 2
+==
+bnz transformword_3_l14
+frame_dig -1
+pushint 3 // 3
+==
+bnz transformword_3_l13
+frame_dig -1
+pushint 4 // 4
+==
+bnz transformword_3_l12
+frame_dig -1
+pushint 5 // 5
+==
+bnz transformword_3_l11
+frame_dig -1
+pushint 6 // 6
+==
+bnz transformword_3_l10
+frame_dig -1
+pushint 7 // 7
+==
+bnz transformword_3_l9
+err
+transformword_3_l9:
+pushbytes 0x4275646170657374 // "Budapest"
+b transformword_3_l17
+transformword_3_l10:
+pushbytes 0x4265726e // "Bern"
+b transformword_3_l17
+transformword_3_l11:
+pushbytes 0x4d6164726964 // "Madrid"
+b transformword_3_l17
+transformword_3_l12:
+pushbytes 0x5061726973 // "Paris"
+b transformword_3_l17
+transformword_3_l13:
+pushbytes 0x4c6f6e646f6e // "London"
+b transformword_3_l17
+transformword_3_l14:
+pushbytes 0x417468656e73 // "Athens"
+b transformword_3_l17
+transformword_3_l15:
+pushbytes 0x5769656e // "Wien"
+b transformword_3_l17
+transformword_3_l16:
+pushbytes 0x42656c6772616465 // "Belgrade"
+transformword_3_l17:
+retsub
+
+// game_result
+gameresult_4:
+proto 1 1
+bytec_0 // ""
+dup
+txn Sender
+bytec_3 // "city"
+app_local_get
+store 0
+txna Accounts 1
+bytec_3 // "city"
+app_local_get
+store 1
+bytec 7 // "wager"
+app_global_get
+store 2
+load 0
+bytec_1 // "guessing_city"
+app_global_get
+==
+bnz gameresult_4_l5
+load 1
+bytec_1 // "guessing_city"
+app_global_get
+==
+bnz gameresult_4_l4
+load 0
+bytec_1 // "guessing_city"
+app_global_get
+==
+load 1
+bytec_1 // "guessing_city"
+app_global_get
+==
+&&
+bz gameresult_4_l6
+intc_0 // 0
+load 2
+callsub pay_5
+intc_1 // 1
+load 2
+callsub pay_5
+bytec_2 // "result"
+pushbytes 0x4472617720726573756c74 // "Draw result"
+app_global_put
+bytec_2 // "result"
+app_global_get
+frame_bury 1
+frame_dig 1
+len
+itob
+extract 6 0
+frame_dig 1
+concat
+frame_bury 1
+frame_dig 1
+frame_bury 0
+b gameresult_4_l6
+gameresult_4_l4:
+intc_1 // 1
+load 2
+callsub pay_5
+bytec_2 // "result"
+pushbytes 0x497a677562696c6920737465 // "Izgubili ste"
+app_global_put
+bytec_2 // "result"
+app_global_get
+frame_bury 1
+frame_dig 1
+len
+itob
+extract 6 0
+frame_dig 1
+concat
+frame_bury 1
+frame_dig 1
+frame_bury 0
+b gameresult_4_l6
+gameresult_4_l5:
+intc_0 // 0
+load 2
+callsub pay_5
+bytec_2 // "result"
+pushbytes 0x506f626564696c6920737465 // "Pobedili ste"
+app_global_put
+bytec_2 // "result"
+app_global_get
+frame_bury 1
+frame_dig 1
+len
+itob
+extract 6 0
+frame_dig 1
+concat
+frame_bury 1
+frame_dig 1
+frame_bury 0
+gameresult_4_l6:
+retsub
+
+// pay
+pay_5:
+proto 2 0
+itxn_begin
+intc_1 // pay
+itxn_field TypeEnum
+frame_dig -2
+txnas Accounts
+itxn_field Receiver
+frame_dig -1
+itxn_field Amount
+itxn_submit
+retsub
+
+// sum_of_fees
+sumoffees_6:
+proto 0 1
+intc_0 // 0
+intc_0 // 0
+store 4
+intc_0 // 0
+store 3
+sumoffees_6_l1:
+load 4
+global GroupSize
+<
+bz sumoffees_6_l3
+load 3
+load 4
+gtxns Fee
++
+store 3
+load 4
+intc_1 // 1
++
+store 4
+b sumoffees_6_l1
+sumoffees_6_l3:
+load 3
+frame_bury 0
+retsub
+
+// word_length
+wordlength_7:
+proto 0 1
+bytec_0 // ""
+intc_0 // 0
+bytec_0 // ""
+intc_0 // 0
+dup
+bytec_0 // ""
+dup
+bytec_1 // "guessing_city"
+app_global_get
+len
+frame_bury 1
+pushbytes 0x4e756d626572206f66206c6574746572733a20 // "Number of letters: "
+frame_bury 2
+frame_dig 2
+len
+itob
+extract 6 0
+frame_dig 2
+concat
+frame_bury 2
+frame_dig 2
+frame_bury 6
+frame_dig 6
+frame_bury 5
+pushint 10 // 10
+frame_bury 3
+frame_dig 3
+itob
+extract 6 0
+frame_dig 1
+itob
+concat
+frame_dig 5
+concat
+frame_bury 0
+retsub
+
+// play_caster
+playcaster_8:
+proto 0 0
+intc_0 // 0
+bytec_0 // ""
+intc_0 // 0
+txna ApplicationArgs 1
+frame_bury 1
+txn GroupIndex
+intc_1 // 1
+-
+frame_bury 2
+frame_dig 2
+gtxns TypeEnum
+intc_1 // pay
+==
+assert
+frame_dig 1
+frame_dig 2
+callsub play_2
+frame_bury 0
+bytec 4 // 0x151f7c75
+frame_dig 0
+itob
+concat
+log
+retsub
+
+// game_result_caster
+gameresultcaster_9:
+proto 0 0
+bytec_0 // ""
+intc_0 // 0
+txna ApplicationArgs 1
+intc_0 // 0
+getbyte
+frame_bury 1
+frame_dig 1
+callsub gameresult_4
+frame_bury 0
+bytec 4 // 0x151f7c75
+frame_dig 0
+concat
+log
+retsub
+
+// sum_of_fees_caster
+sumoffeescaster_10:
+proto 0 0
+intc_0 // 0
+callsub sumoffees_6
+frame_bury 0
+bytec 4 // 0x151f7c75
+frame_dig 0
+itob
+concat
+log
+retsub
+
+// word_length_caster
+wordlengthcaster_11:
+proto 0 0
+bytec_0 // ""
+callsub wordlength_7
+frame_bury 0
+bytec 4 // 0x151f7c75
+frame_dig 0
+concat
+log
+retsub

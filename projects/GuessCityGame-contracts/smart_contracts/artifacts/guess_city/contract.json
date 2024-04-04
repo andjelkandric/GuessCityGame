@@ -1,0 +1,48 @@
+{
+    "name": "guess_city",
+    "methods": [
+        {
+            "name": "play",
+            "args": [
+                {
+                    "type": "string",
+                    "name": "city"
+                },
+                {
+                    "type": "pay",
+                    "name": "payment"
+                }
+            ],
+            "returns": {
+                "type": "uint64"
+            }
+        },
+        {
+            "name": "game_result",
+            "args": [
+                {
+                    "type": "account",
+                    "name": "opponent"
+                }
+            ],
+            "returns": {
+                "type": "string"
+            }
+        },
+        {
+            "name": "sum_of_fees",
+            "args": [],
+            "returns": {
+                "type": "uint64"
+            }
+        },
+        {
+            "name": "word_length",
+            "args": [],
+            "returns": {
+                "type": "(string,uint64)"
+            }
+        }
+    ],
+    "networks": {}
+}
